@@ -137,30 +137,37 @@ OBSERVATIONS AND STORAGE:
 Raw Bench Notes:
 {user_input}
 """
-            response = client.models.generate_content(
-                model="gemini-3.8-flash", contents=prompt
-            )
-            parsed_text = response.text
-
-            content_data = {
-                "Workflow Category": exp_category,
-                "Raw Notes": user_input,
-                "Structured Summary": parsed_text,
-            }
-            saved_file = create_or_append_docx(
-                current_batch, exp_category, content_data
-            )
-
-            st.success(f"Successfully updated record in {saved_file}!")
-            st.markdown("### Formatted Record Preview")
-            st.write(parsed_text)
-
-            with open(saved_file, "rb") as f:
-                st.download_button(
-                    label="Download Word (.docx) Record",
-                    data=f,
-                    file_name=saved_file,
-                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+           try:
+                response = client.models.generate_content(
+                    model="gemini-3.8-flash", contents=prompt
                 )
+                parsed_text = response.text
+
+                content_data = {
+                    "Workflow Category": exp_category,
+                    "Raw Notes": user_input,
+                    "Structured Summary": parsed_text,
+                }
+                saved_file = create_or_append_docx(
+                    current_batch, exp_category, content_data
+                )
+
+                st.success(f"Successfully updated record in {saved_file}!")
+                st.markdown("### Formatted Record Preview")
+                st.write(parsed_text)
+
+                with open(saved_file, "rb") as f:
+                    st.download_button(
+                        label="Download Word (.docx) Record",
+                        data=f,
+                        file_name=saved_file,
+                        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    )
+            except Exception as e:
+                st.error(
+                    "Google AI servers are temporarily busy. Please wait 10 seconds and click 'Process & Record Experiment' again."
+                )
+    else:
+        st.warning("Please enter some bench notes before processing.")
     else:
         st.warning("Please enter some bench notes before processing.")
