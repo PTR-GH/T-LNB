@@ -90,22 +90,7 @@ with st.sidebar:
     }
     selected_code = code_map[exp_category]
 
-    if st.button("Generate New Batch Number"):
-        st.session_state["current_batch"] = get_next_batch_number(selected_code)
-
-    current_batch = st.session_state.get(
-        "current_batch", get_next_batch_number(selected_code)
-    )
-    st.info(f"Active Batch: **{current_batch}**")
-
-# Main Chat / Input Area
-st.subheader("AI Lab Scribe Input")
-user_input = st.text_area(
-    "Enter rough bench notes (e.g., 'extracted 5g powder with 50ml MeOH, reflux 2h'):",
-    height=100,
-)
-
-if st.button("Process & Record Experiment"):
+    if st.button("Process & Record Experiment"):
     if user_input:
         with st.spinner("AI Scribe formatting your notes..."):
             prompt = f"""
@@ -137,7 +122,7 @@ OBSERVATIONS AND STORAGE:
 Raw Bench Notes:
 {user_input}
 """
-           try:
+            try:
                 response = client.models.generate_content(
                     model="gemini-3.8-flash", contents=prompt
                 )
@@ -167,7 +152,5 @@ Raw Bench Notes:
                 st.error(
                     "Google AI servers are temporarily busy. Please wait 10 seconds and click 'Process & Record Experiment' again."
                 )
-    else:
-        st.warning("Please enter some bench notes before processing.")
     else:
         st.warning("Please enter some bench notes before processing.")
