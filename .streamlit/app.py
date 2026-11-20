@@ -119,7 +119,7 @@ if st.button("Process & Record Experiment"):
             4. Observations / Results
             """
             response = client.models.generate_content(
-                model="gemini-2.5-flash", contents=prompt
+                model="gemini-3.8-flash", contents=prompt
             )
             parsed_text = response.text
 
