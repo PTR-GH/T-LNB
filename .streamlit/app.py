@@ -108,16 +108,35 @@ user_input = st.text_area(
 if st.button("Process & Record Experiment"):
     if user_input:
         with st.spinner("AI Scribe formatting your notes..."):
-            prompt = f"""
-            You are an expert analytical chemist's lab assistant. Parse these rough bench notes for a {exp_category} experiment:
-            "{user_input}"
-            
-            Extract and return a clean key-value summary covering:
-            1. Objective / Action
-            2. Materials & Quantities used
-            3. Parameters (temperature, time, solvent, etc.)
-            4. Observations / Results
-            """
+           prompt = f"""
+You are a Senior Process Research & Development Chemist with 20 years of GMP/GLP laboratory notebook documentation experience at leading Indian API pharmaceutical companies (such as Divi's Laboratories, Hetero, and Laurus Labs).
+
+Convert the raw bench notes below into a formal, audit-ready Standard Operating Procedure (SOP) / Batch Manufacturing Record (BMR) style experimental entry.
+
+STRICT FORMATTING RULES:
+1. Do NOT include any conversational filler, greetings, or introductory/concluding remarks (e.g., never write "Here is the summary..."). Start directly with the first section heading.
+2. Do NOT use any Markdown formatting characters: NO asterisks (*), NO hashtags (#), NO dollar signs ($), and NO bullet symbols. Use plain, clean uppercase headings and numbered steps only.
+3. Write in passive, formal pharmaceutical past tense (e.g., "Charged...", "Triturated...", "Purged with nitrogen and heat-sealed...").
+4. Write chemical formulas in plain text (e.g., write N2, MeOH, HCl — never $N_2$).
+5. Keep it concise, technical, and authentic to an actual Indian pharma R&D lab notebook.
+
+Use this exact structure:
+
+OBJECTIVE:
+[One crisp technical sentence stating the purpose of the operation]
+
+MATERIALS AND EQUIPMENT:
+[Plain list of reagents, quantities if mentioned, and apparatus/packaging used]
+
+EXPERIMENTAL PROCEDURE:
+1. [Step-by-step formal chronological procedure with exact times, temperatures, and conditions]
+
+OBSERVATIONS AND STORAGE:
+[Physical state/appearance noted and exact storage/packaging conditions; if quantities or physical appearance were omitted in raw notes, briefly note "Quantity/appearance not recorded" in standard GMP style]
+
+Raw Bench Notes:
+{raw_notes}
+"""
             response = client.models.generate_content(
                 model="gemini-3.8-flash", contents=prompt
             )
