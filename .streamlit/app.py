@@ -108,7 +108,7 @@ user_input = st.text_area(
 if st.button("Process & Record Experiment"):
     if user_input:
         with st.spinner("AI Scribe formatting your notes..."):
-           prompt = f"""
+            prompt = f"""
 You are a Senior Process Research & Development Chemist with 20 years of GMP/GLP laboratory notebook documentation experience at leading Indian API pharmaceutical companies (such as Divi's Laboratories, Hetero, and Laurus Labs).
 
 Convert the raw bench notes below into a formal, audit-ready Standard Operating Procedure (SOP) / Batch Manufacturing Record (BMR) style experimental entry.
@@ -135,7 +135,7 @@ OBSERVATIONS AND STORAGE:
 [Physical state/appearance noted and exact storage/packaging conditions; if quantities or physical appearance were omitted in raw notes, briefly note "Quantity/appearance not recorded" in standard GMP style]
 
 Raw Bench Notes:
-{raw_notes}
+{user_input}
 """
             response = client.models.generate_content(
                 model="gemini-3.8-flash", contents=prompt
@@ -147,7 +147,6 @@ Raw Bench Notes:
                 "Raw Notes": user_input,
                 "Structured Summary": parsed_text,
             }
-
             saved_file = create_or_append_docx(
                 current_batch, exp_category, content_data
             )
@@ -164,4 +163,4 @@ Raw Bench Notes:
                     mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                 )
     else:
-                st.warning("Please enter some bench notes before processing.")
+        st.warning("Please enter some bench notes before processing.")
